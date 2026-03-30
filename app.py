@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 import hashlib
+from streamlit.errors import StreamlitSecretNotFoundError
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -13,8 +14,15 @@ from langchain_classic.chains import RetrievalQA
 load_dotenv()  # Loads variables from your .env file
 st.set_page_config(page_title="RAG PDF Chatbot", layout="wide", page_icon="📚")
 
-# Retrieve API Key from .env
-GROQ_API_KEY = st.secrets.get("GROQ_API_KEY", os.getenv("GROQ_API_KEY"))
+# Retrieve API key from Streamlit Cloud secrets first, then local .env
+def get_groq_api_key() -> str | None:
+    try:
+        return st.secrets["GROQ_API_KEY"]
+    except (StreamlitSecretNotFoundError, KeyError):
+        return os.getenv("GROQ_API_KEY")
+
+
+GROQ_API_KEY = get_groq_api_key()
 
 # --- 2. CORE FUNCTIONS ---
 
