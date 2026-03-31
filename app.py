@@ -85,7 +85,7 @@ with st.sidebar:
     
     # Check if API Key exists
     if not GROQ_API_KEY:
-        st.warning("⚠️ GROQ_API_KEY not found in .env file!")
+        st.warning("⚠️ GROQ_API_KEY not found. Add it in Streamlit Cloud Secrets (for deploy) or .env (for local run).")
     else:
         st.success("✅ API Key Loaded")
 
